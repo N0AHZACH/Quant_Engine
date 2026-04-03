@@ -24,55 +24,63 @@ The system implements a **selective, cross-sectional strategy** that focuses on 
 
 ```mermaid
 graph TD
-    %% Global Styles
-    classDef default fill:#fff,stroke:#333,stroke-width:1px;
-    classDef highlight fill:#f9f9f9,stroke:#000,stroke-width:2px;
+    %% Global Style Definitions
+    classDef mainNode fill:#fdfdfd,stroke:#000,stroke-width:2px,color:#000;
+    classDef subNode fill:#fff,stroke:#666,stroke-width:1px,color:#333,stroke-dasharray: 5 5;
 
-    %% Data Pipeline
-    A[<b>1. Data Infrastructure</b><br/>NSE API Data Fetcher] --> B[Raw Data Lake<br/>CSV / Parquet Store]
-    B --> C[Silver Layer<br/>Cleaning & Corporate Actions]
-    C --> D[<b>2. Feature Engineering</b>]
-    
-    subgraph Feature_Set [Feature Engineering Specifics]
+    %% 1. Data Pipeline
+    subgraph Data_Pipeline [1. Data Infrastructure & ETL]
+        A[<b>NSE Data Fetcher</b><br/>Daily/Live API Ingestion] --> B[<b>Raw Data Lake</b><br/>CSV / Parquet Storage]
+        B --> C[<b>Silver Data Layer</b><br/>Cleaning & Corporate Actions]
+    end
+    class A,B,C mainNode;
+
+    %% 2. Feature Engineering
+    subgraph Feature_Layer [2. Feature Engineering Engine]
+        D[<b>Feature Extraction</b>]
         D1[Technical: RSI, MACD, EMAs]
         D2[Cross-Sectional: Z-Scores, Rankings]
         D3[Volatility: ATR, Rolling Std]
+        D --- D1 & D2 & D3
     end
-    D --- D1 & D2 & D3
+    class D mainNode;
+    class D1,D2,D3 subNode;
 
-    %% Intelligence Layer
-    D1 & D2 & D3 --> E[<b>3. ML Ensemble Predictor</b>]
-    
-    subgraph Model_Mix [Model Universe]
+    %% 3. ML Ensemble
+    C & D1 & D2 & D3 --> E[<b>3. ML Ensemble Predictor</b>]
+    subgraph ML_Models [Diverse Model Universe]
         E1[XGBoost & Random Forest]
         E2[CNN / GRU / LSTM]
     end
     E --- E1 & E2
-    
-    E1 & E2 --> F[Multi-Model Aggregation<br/>Weighted Return Forecasts]
+    E1 & E2 --> F[<b>Multi-Model Aggregation</b><br/>Weighted Return Forecasts]
+    class E,F mainNode;
+    class E1,E2 subNode;
 
-    %% Risk & Decision
+    %% 4. Risk & Decision
     F --> G[<b>4. Risk & Decision Center</b>]
-    G --> H{Regime Filter<br/>Bull / Bear / Flat}
-    H --> I[Adaptive Risk Manager]
-    
-    subgraph Controls [Risk Controls]
+    subgraph Risk_Controls [Adaptive Controls]
+        H{Regime Filter}
+        I[Adaptive Risk Manager]
         I1[Active Drawdown Guard]
-        I2[Volatility-Adjusted Sizing]
+        I2[Volatility Position Sizing]
     end
-    I --- I1 & I2
+    G --> H --> I --- I1 & I2
+    class G,I mainNode;
+    class H,I1,I2 subNode;
 
-    %% Execution
+    %% 5. Execution & Feedback
     I1 & I2 --> J[<b>5. Execution & Validation</b>]
     J --> K{Trade Gate}
-    K --> L[Live NSE API Execution]
-    K --> M[Simulated Paper Trading]
-    
-    L & M --> N[Performance Metrics<br/>Logging & Feedback]
+    K --> L[Live NSE Execution]
+    K --> M[Paper Trading]
+    L & M --> N[<b>Performance Metrics</b><br/>Logging & Feedback Loop]
     N -->|Hyperparameter Tune| E
+    class J,N mainNode;
+    class K,L,M subNode;
 
-    %% Class Assignments
-    class A,D,E,G,J highlight;
+    %% High-level connections
+    linkStyle default stroke:#000,stroke-width:1.5px;
 ```
 
 ---
