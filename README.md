@@ -20,7 +20,51 @@ The system implements a **selective, cross-sectional strategy** that focuses on 
 
 ---
 
-## 🏗️ Architecture & Modules
+## 🏗️ Architecture Overflow
+
+```mermaid
+graph TD
+    subgraph Data_Pipeline [Data Lake & Processing]
+        A[NSE Raw Data] --> B{Fetch & Store}
+        B -->|Lake/| C[Silver/Gold Data]
+        C --> D[Feature Engineering]
+    end
+
+    subgraph Intelligence_Layer [ML Ensemble Engine]
+        D --> E{Predictor Ensemble}
+        E -->|XGBoost| F[Regression Returns]
+        E -->|RF| F
+        E -->|LSTM/GRU| F
+        E -->|CNN| F
+    end
+
+    subgraph Executive_Decision [Signal & Risk Engine]
+        F --> G[Signal Aggregation]
+        G --> H[Regime Detection]
+        H --> I[Risk Manager]
+        I --> J[Position Sizing]
+    end
+
+    subgraph Execution_Layer [Live Operations]
+        J --> K{Trade Gate}
+        K -->|Live/| L[NSE API Execution]
+        K -->|Paper/| M[Simulated Trading]
+        L --> N[Portfolio Monitoring]
+        M --> N
+    end
+
+    subgraph Feedback_Loop [Validation]
+        L & M --> O[Backtester / Walk-forward]
+        O -->|Optimization| E
+    end
+
+    style Data_Pipeline fill:#f9f,stroke:#333,stroke-width:2px
+    style Intelligence_Layer fill:#bbf,stroke:#333,stroke-width:2px
+    style Executive_Decision fill:#dfd,stroke:#333,stroke-width:2px
+    style Execution_Layer fill:#fdd,stroke:#333,stroke-width:2px
+```
+
+---
 
 The engine is modularized into specialized layers for high maintainability and performance:
 
