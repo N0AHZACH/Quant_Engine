@@ -24,22 +24,27 @@ The system implements a **selective, cross-sectional strategy** that focuses on 
 
 ```mermaid
 flowchart TD
-    %% Global Styles
-    classDef mainNode fill:#fff,stroke:#000,stroke-width:2px,color:#000;
-    classDef detailNode fill:#fcfcfc,stroke:#333,stroke-width:1px,color:#333,stroke-dasharray: 5 5;
+    %% Global Style Definitions
+    classDef mainNode fill:#FFFFFF,stroke:#000000,stroke-width:2.5px,color:#000000;
+    classDef detailNode fill:#F9F9F9,stroke:#333333,stroke-width:1.5px,color:#111111,stroke-dasharray: 4 4;
 
-    %% 1. Data Infrastructure
-    subgraph Data_Lake [1. Data Infrastructure & ETL]
-        A[NSE Data Fetcher] --> B[Raw Data Lake]
-        B --> C[Silver Data Layer]
-        C --> D[Gold Data Layer]
+    %% 1. Data Infrastructure & ETL
+    subgraph Data_Pipe [1. Data Infrastructure & ETL]
+        A[<b>NSE Data Fetcher</b><br/>Multi-Source API Ingestion]
+        B[<b>Raw Data Lake</b><br/>Immutable CSV/Parquet Store]
+        C[<b>Silver Data Layer</b><br/>Cleaning, Adjustments & Splits]
+        D[<b>Gold Data Layer</b><br/>ML-Ready Model Tensors & Targets]
+        
+        A --> B
+        B --> C
+        C --> D
     end
     class A,B,C,D mainNode;
 
     %% 2. Feature Engineering
-    subgraph Features [2. Feature Engineering Pipeline]
-        E[Feature Extraction Engine]
-        E1[Technical Indicators: RSI, MACD, EMAs]
+    D --> E[<b>Feature Extraction Engine</b>]
+    subgraph Feature_Eng [Feature Library]
+        E1[Technical: RSI, MACD, EMAs]
         E2[Cross-Sectional: Rankings, Z-Scores]
         E3[Volatility: ATR, Rolling Std]
         
@@ -51,49 +56,65 @@ flowchart TD
     class E1,E2,E3 detailNode;
 
     %% 3. Intelligence Engine
-    D --> F[3. ML Intelligence Engine]
     E1 --> F
     E2 --> F
     E3 --> F
-
     subgraph Intelligence [ML Ensemble Strategy]
-        F --> F1[XGBoost & Random Forest Ensembles]
-        F --> F2[CNN / GRU / LSTM Temporal Models]
-        F1 --> G[Multi-Model Aggregation]
+        F[<b>Ensemble Predictor Engine</b>]
+        F1[XGBoost & Random Forest Ensembles]
+        F2[CNN / GRU / LSTM Temporal Models]
+        G[<b>Model Weight Optimization</b>]
+        H[<b>Final Weighted Signal Generation</b>]
+        
+        F --> F1
+        F --> F2
+        F1 --> G
         F2 --> G
+        G --> H
     end
-    class F,G mainNode;
+    class F,G,H mainNode;
     class F1,F2 detailNode;
 
-    %% 4. Risk & Decision
-    G --> H[4. Risk & Decision Center]
-    subgraph Risk_Strategy [Adaptive Market Controls]
-        H --> H1[Regime Filter: Bull / Bear / Flat]
-        H1 --> H2[Adaptive Risk Management]
-        H2 --> H3[Active Drawdown Guard]
-        H2 --> H4[Volatility-Based Position Sizing]
+    %% 4. Risk Decision Center
+    H --> I[<b>Decision Engine</b>]
+    subgraph Risk_Center [Risk & Decision Center]
+        I1[Regime Filter: Bull / Bear / Flat]
+        I2[Adaptive Risk Manager]
+        I3[Active Drawdown Guard]
+        I4[Volatility-Based Position Sizing]
+        
+        I --> I1
+        I1 --> I2
+        I2 --> I3
+        I2 --> I4
     end
-    class H,H2 mainNode;
-    class H1,H3,H4 detailNode;
+    class I,I2 mainNode;
+    class I1,I3,I4 detailNode;
 
     %% 5. Execution & Validation
-    H3 --> I[5. Execution & Validation Gate]
-    H4 --> I
-    subgraph Execution [Deployment Path]
-        I --> I1[Trade Gate Filter]
-        I1 --> I2[Live NSE Broker API]
-        I1 --> I3[Paper Trading Simulation]
-        I2 --> J[Performance Metrics Logger]
-        I3 --> J
+    I3 --> J
+    I4 --> J
+    subgraph Execution [Execution & Validation]
+        J[<b>Trade Gate Filter</b>]
+        J1[Live NSE Execution: API/Broker]
+        J2[Paper Trading Simulation]
+        K[<b>Performance Analytics Logger</b>]
+        L[<b>Backtester / Walk-forward Loop</b>]
+        
+        J --> J1
+        J --> J2
+        J1 --> K
+        J2 --> K
+        K --> L
     end
-    class I,J mainNode;
-    class I1,I2,I3 detailNode;
+    class J,K,L mainNode;
+    class J1,J2 detailNode;
 
-    %% Feedback Loop
-    J -.->|Optimization Feedback| F
+    %% Global Feedback loop
+    L -.->|Meta-Optimization| F
 
     %% Global Connector Styling
-    linkStyle default stroke:#000,stroke-width:2px;
+    linkStyle default stroke:#000000,stroke-width:2px;
 ```
 
 ---
