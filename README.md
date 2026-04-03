@@ -25,62 +25,66 @@ The system implements a **selective, cross-sectional strategy** that focuses on 
 ```mermaid
 graph TD
     %% Global Style Definitions
-    classDef mainNode fill:#fdfdfd,stroke:#000,stroke-width:2px,color:#000;
-    classDef subNode fill:#fff,stroke:#666,stroke-width:1px,color:#333,stroke-dasharray: 5 5;
+    classDef mainNode fill:#fff,stroke:#333,stroke-width:1.5px,color:#000;
+    classDef internalNode fill:#fdfdfd,stroke:#999,stroke-width:1px,color:#444,stroke-dasharray: 4 4;
 
-    %% 1. Data Pipeline
-    subgraph Data_Pipeline [1. Data Infrastructure & ETL]
-        A[<b>NSE Data Fetcher</b><br/>Daily/Live API Ingestion] --> B[<b>Raw Data Lake</b><br/>CSV / Parquet Storage]
-        B --> C[<b>Silver Data Layer</b><br/>Cleaning & Corporate Actions]
+    %% 1. Data Infrastructure (Lake Architecture)
+    subgraph Data_Lake [1. Data Infrastructure & ETL]
+        A[<b>NSE Data Fetcher</b><br/>Multi-Source API Ingestion] --> B[<b>Raw Data Lake</b><br/>Immutable CSV/Parquet Store]
+        B --> C[<b>Silver Data Layer</b><br/>Cleaning, Adjustments & Splits]
+        C --> D[<b>Gold Data Layer</b><br/>ML-Ready Model Tensors & Targets]
     end
-    class A,B,C mainNode;
+    class A,B,C,D mainNode;
 
     %% 2. Feature Engineering
     subgraph Feature_Layer [2. Feature Engineering Engine]
-        D[<b>Feature Extraction</b>]
-        D1[Technical: RSI, MACD, EMAs]
-        D2[Cross-Sectional: Z-Scores, Rankings]
-        D3[Volatility: ATR, Rolling Std]
-        D --- D1 & D2 & D3
+        E[<b>Feature Extraction Pipeline</b>]
+        E1[Technical: RSI, MACD, EMAs]
+        E2[Cross-Sectional: Rankings, Z-Scores]
+        E3[Volatility: ATR, Rolling Std]
+        E --- E1 & E2 & E3
     end
-    class D mainNode;
-    class D1,D2,D3 subNode;
+    class E mainNode;
+    class E1,E2,E3 internalNode;
 
-    %% 3. ML Ensemble
-    C & D1 & D2 & D3 --> E[<b>3. ML Ensemble Predictor</b>]
-    subgraph ML_Models [Diverse Model Universe]
-        E1[XGBoost & Random Forest]
-        E2[CNN / GRU / LSTM]
+    %% 3. Intelligence Engine
+    D & E1 & E2 & E3 --> F[<b>3. ML Ensemble Intelligence</b>]
+    subgraph Model_Mix [Diverse Model Universe]
+        F1[XGBoost & Random Forest]
+        F2[CNN / GRU / LSTM]
     end
-    E --- E1 & E2
-    E1 & E2 --> F[<b>Multi-Model Aggregation</b><br/>Weighted Return Forecasts]
-    class E,F mainNode;
-    class E1,E2 subNode;
+    F --- F1 & F2
+    F1 & F2 --> G[<b>Multi-Model Aggregation</b><br/>Weighted Return Forecasts]
+    class F,G mainNode;
+    class F1,F2 internalNode;
 
-    %% 4. Risk & Decision
-    F --> G[<b>4. Risk & Decision Center</b>]
-    subgraph Risk_Controls [Adaptive Controls]
-        H{Regime Filter}
-        I[Adaptive Risk Manager]
-        I1[Active Drawdown Guard]
-        I2[Volatility Position Sizing]
+    %% 4. Risk & Decision Center
+    G --> H[<b>4. Risk & Decision Center</b>]
+    subgraph Risk_Controls [Adaptive Risk Strategy]
+        H1{Regime Filter}
+        H2[Adaptive Risk Manager]
+        H3[Active Drawdown Guard]
+        H4[Volatility-Based Sizing]
     end
-    G --> H --> I --- I1 & I2
-    class G,I mainNode;
-    class H,I1,I2 subNode;
+    H --> H1 --> H2 --- H3 & H4
+    class H,H2 mainNode;
+    class H1,H3,H4 internalNode;
 
     %% 5. Execution & Feedback
-    I1 & I2 --> J[<b>5. Execution & Validation</b>]
-    J --> K{Trade Gate}
-    K --> L[Live NSE Execution]
-    K --> M[Paper Trading]
-    L & M --> N[<b>Performance Metrics</b><br/>Logging & Feedback Loop]
-    N -->|Hyperparameter Tune| E
-    class J,N mainNode;
-    class K,L,M subNode;
+    H3 & H4 --> I[<b>5. Execution & Validation</b>]
+    subgraph Execution_Path [Deployment]
+        I1{Trade Gate}
+        I2[Live NSE Execution]
+        I3[Paper Trading Simulation]
+    end
+    I --> I1 --> I2 & I3
+    I2 & I3 --> J[<b>Performance Metrics</b><br/>Logging & Meta-Analytics]
+    J -->|Feedback Loop| F
+    class I,J mainNode;
+    class I1,I2,I3 internalNode;
 
-    %% High-level connections
-    linkStyle default stroke:#000,stroke-width:1.5px;
+    %% Connector Styling
+    linkStyle default stroke:#444,stroke-width:1.2px;
 ```
 
 ---
