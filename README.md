@@ -25,8 +25,8 @@ The system implements a **selective, cross-sectional strategy** that focuses on 
 ```mermaid
 graph TD
     %% Global Style Definitions
-    classDef mainNode fill:#fff,stroke:#333,stroke-width:1.5px,color:#000;
-    classDef internalNode fill:#fdfdfd,stroke:#999,stroke-width:1px,color:#444,stroke-dasharray: 4 4;
+    classDef mainNode fill:#ffffff,stroke:#000000,stroke-width:1.5px,color:#000000;
+    classDef internalNode fill:#f9f9f9,stroke:#333333,stroke-width:1px,color:#111111;
 
     %% 1. Data Infrastructure (Lake Architecture)
     subgraph Data_Lake [1. Data Infrastructure & ETL]
@@ -42,7 +42,9 @@ graph TD
         E1[Technical: RSI, MACD, EMAs]
         E2[Cross-Sectional: Rankings, Z-Scores]
         E3[Volatility: ATR, Rolling Std]
-        E --- E1 & E2 & E3
+        E --- E1
+        E --- E2
+        E --- E3
     end
     class E mainNode;
     class E1,E2,E3 internalNode;
@@ -53,7 +55,8 @@ graph TD
         F1[XGBoost & Random Forest]
         F2[CNN / GRU / LSTM]
     end
-    F --- F1 & F2
+    F --- F1
+    F --- F2
     F1 & F2 --> G[<b>Multi-Model Aggregation</b><br/>Weighted Return Forecasts]
     class F,G mainNode;
     class F1,F2 internalNode;
@@ -66,7 +69,10 @@ graph TD
         H3[Active Drawdown Guard]
         H4[Volatility-Based Sizing]
     end
-    H --> H1 --> H2 --- H3 & H4
+    H --> H1
+    H1 --> H2
+    H2 --- H3
+    H2 --- H4
     class H,H2 mainNode;
     class H1,H3,H4 internalNode;
 
@@ -77,14 +83,16 @@ graph TD
         I2[Live NSE Execution]
         I3[Paper Trading Simulation]
     end
-    I --> I1 --> I2 & I3
+    I --> I1
+    I1 --> I2
+    I1 --> I3
     I2 & I3 --> J[<b>Performance Metrics</b><br/>Logging & Meta-Analytics]
     J -->|Feedback Loop| F
     class I,J mainNode;
     class I1,I2,I3 internalNode;
 
-    %% Connector Styling
-    linkStyle default stroke:#444,stroke-width:1.2px;
+    %% Connector Styling - High Visibility
+    linkStyle default stroke:#222,stroke-width:1.5px;
 ```
 
 ---
