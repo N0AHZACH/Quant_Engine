@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+.cache
+.pytest_cache/
+
+# Core user exclusions
+lake/
+backups/
+models/
+deprecated_models/
+obselete/
+cache/
+
+# Specific large files
+backtest_trade_log.csv
+paper_trading_log.csv
+paper_trading_log_backup.csv
+trade_log.csv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
