@@ -24,64 +24,55 @@ The system implements a **selective, cross-sectional strategy** that focuses on 
 
 ```mermaid
 graph TD
-    subgraph Data_Infrastructure [1. Data Infrastructure & ETL]
-        A1[NSE Data Fetcher] -->|Daily/Live| A2[Raw CSV/Parquet Lake]
-        A2 -->|Cleaning| A3[Silver Data: Cleaned & Adjusted]
-        A3 -->|Feature Engine| A4[Gold Data: ML-Ready Tensors]
-        
-        subgraph Features [Feature Engineering]
-            A4a[Technical: RSI, MACD, EMAs]
-            A4b[Cross-Sectional: Z-Scores, Rankings]
-            A4c[Volatility: ATR, Rolling Std]
-        end
-        A4 --- A4a & A4b & A4c
-    end
+    %% Global Styles
+    classDef default fill:#fff,stroke:#333,stroke-width:1px;
+    classDef highlight fill:#f9f9f9,stroke:#000,stroke-width:2px;
 
-    subgraph Intelligence_Engine [2. AI/ML Ensemble Engine]
-        A4 --> B1{Ensemble Predictor}
-        subgraph Models [Diverse Model Universe]
-            B1a[XGBoost: Gradient Boosting]
-            B1b[Random Forest: Tree-Based]
-            B1c[CNN/GRU: Temporal Sequence]
-            B1d[LSTM: Long-term Dependencies]
-        end
-        B1 --- B1a & B1b & B1c & B1d
-        B1a & B1b & B1c & B1d --> B2[Model Weight Optimization]
-        B2 --> B3[Aggregated Return Forecasts]
+    %% Data Pipeline
+    A[<b>1. Data Infrastructure</b><br/>NSE API Data Fetcher] --> B[Raw Data Lake<br/>CSV / Parquet Store]
+    B --> C[Silver Layer<br/>Cleaning & Corporate Actions]
+    C --> D[<b>2. Feature Engineering</b>]
+    
+    subgraph Feature_Set [Feature Engineering Specifics]
+        D1[Technical: RSI, MACD, EMAs]
+        D2[Cross-Sectional: Z-Scores, Rankings]
+        D3[Volatility: ATR, Rolling Std]
     end
+    D --- D1 & D2 & D3
 
-    subgraph Risk_Decision_Center [3. Risk & Decision Center]
-        B3 --> C1[Signal Generation Filter]
-        C1 --> C2{Regime Filter}
-        C2 -->|Bull/Bear/Flat| C3[Adaptive Risk Manager]
-        
-        subgraph Risk_Controls [Strict Risk Controls]
-            C3a[Active Drawdown Guard]
-            C3b[Position Sizing: Vol-Adjusted]
-            C3c[Diversification Limits]
-        end
-        C3 --- C3a & C3b & C3c
-        C3 --> C4[Final Allocation Vector]
+    %% Intelligence Layer
+    D1 & D2 & D3 --> E[<b>3. ML Ensemble Predictor</b>]
+    
+    subgraph Model_Mix [Model Universe]
+        E1[XGBoost & Random Forest]
+        E2[CNN / GRU / LSTM]
     end
+    E --- E1 & E2
+    
+    E1 & E2 --> F[Multi-Model Aggregation<br/>Weighted Return Forecasts]
 
-    subgraph Execution_Validation [4. Execution & Validation]
-        C4 --> D1{Trade Gate}
-        D1 -->|Live Execution| D2[NSE API / Broker]
-        D1 -->|Simulated| D3[Paper Trading Engine]
-        
-        D2 & D3 --> E1[Performance Metrics Logger]
-        E1 -->|Feedback Loop| E2[Backtester / Walk-Forward]
-        E2 -->|Hyperparameter Tune| B1
+    %% Risk & Decision
+    F --> G[<b>4. Risk & Decision Center</b>]
+    G --> H{Regime Filter<br/>Bull / Bear / Flat}
+    H --> I[Adaptive Risk Manager]
+    
+    subgraph Controls [Risk Controls]
+        I1[Active Drawdown Guard]
+        I2[Volatility-Adjusted Sizing]
     end
+    I --- I1 & I2
 
-    %% Styles
-    style Data_Infrastructure fill:#f0f7ff,stroke:#0056b3,stroke-width:2px
-    style Intelligence_Engine fill:#fff3f0,stroke:#d4380d,stroke-width:2px
-    style Risk_Decision_Center fill:#f6ffed,stroke:#389e0d,stroke-width:2px
-    style Execution_Validation fill:#fffbe6,stroke:#d4b106,stroke-width:2px
-    style Features fill:#ffffff,stroke-dasharray: 5 5
-    style Models fill:#ffffff,stroke-dasharray: 5 5
-    style Risk_Controls fill:#ffffff,stroke-dasharray: 5 5
+    %% Execution
+    I1 & I2 --> J[<b>5. Execution & Validation</b>]
+    J --> K{Trade Gate}
+    K --> L[Live NSE API Execution]
+    K --> M[Simulated Paper Trading]
+    
+    L & M --> N[Performance Metrics<br/>Logging & Feedback]
+    N -->|Hyperparameter Tune| E
+
+    %% Class Assignments
+    class A,D,E,G,J highlight;
 ```
 
 ---
