@@ -25,20 +25,20 @@ The system implements a **selective, cross-sectional strategy** that focuses on 
 ```mermaid
 flowchart TD
     %% Global Style Definitions
-    classDef mainNode fill:#FFFFFF,stroke:#000000,stroke-width:2px,color:#000000;
-    classDef internalNode fill:#FBFBFB,stroke:#000000,stroke-width:1.5px,color:#000000;
+    classDef mainNode fill:#fff,stroke:#000,stroke-width:2px,color:#000;
+    classDef internalNode fill:#f9f9f9,stroke:#000,stroke-width:1px,color:#000;
 
     %% 1. Data Infrastructure
-    subgraph Data_Pipe [1. Data Infrastructure & ETL]
-        A[<b>NSE Data Fetcher</b>] --> B[<b>Raw Data Lake</b>]
-        B --> C[<b>Silver Data Layer</b>]
-        C --> D[<b>Gold Data Layer</b><br/>(ML Tensors & Targets)]
+    subgraph Data_Lake [1. Data Infrastructure & ETL]
+        A[NSE Data Fetcher] --> B[Raw Data Lake]
+        B --> C[Silver Data Layer]
+        C --> D[Gold Data Layer]
     end
     class A,B,C,D mainNode;
 
     %% 2. Feature Engineering
-    subgraph Feature_Eng [2. Feature Engineering Engine]
-        E[<b>Feature Extraction Pipeline</b>]
+    subgraph Feature_Layer [2. Feature Engineering Engine]
+        E[Feature Extraction Pipeline]
         E --> E1[Technical Indicators]
         E --> E2[Cross-Sectional Rankings]
         E --> E3[Volatility Metrics]
@@ -46,22 +46,25 @@ flowchart TD
     class E mainNode;
     class E1,E2,E3 internalNode;
 
-    %% Intelligence Engine - Vertical Connections to avoid crossover
-    D --> F[<b>3. Intelligence Engine</b>]
-    E1 & E2 & E3 --> F
+    %% Intelligence Engine - Explicit individual paths to avoid render errors
+    D --> F[3. Intelligence Engine]
+    E1 --> F
+    E2 --> F
+    E3 --> F
     
     subgraph Ensemble_Section [ML Ensemble Strategy]
         F --> F1[XGBoost & Random Forest]
         F --> F2[CNN / GRU / LSTM]
-        F1 & F2 --> G[<b>Final Model Aggregation</b>]
+        F1 --> G[Final Model Aggregation]
+        F2 --> G
     end
     class F,G mainNode;
     class F1,F2 internalNode;
 
     %% 4. Risk & Decision Center
-    G --> H[<b>4. Risk & Decision Center</b>]
+    G --> H[4. Risk & Decision Center]
     subgraph Risk_Strategy [Adaptive Risk Controls]
-        H --> H1{Regime Filter}
+        H --> H1[Regime Filter]
         H1 --> H2[Adaptive Risk Manager]
         H2 --> H3[Active Drawdown Guard]
         H2 --> H4[Volatility-Based Sizing]
@@ -70,21 +73,23 @@ flowchart TD
     class H1,H3,H4 internalNode;
 
     %% 5. Execution & Feedback
-    H3 & H4 --> I[<b>5. Execution & Validation</b>]
+    H3 --> I[5. Execution & Validation]
+    H4 --> I
     subgraph Execution_Loop [Deployment Path]
-        I --> I1{Trade Gate}
+        I --> I1[Trade Gate Filter]
         I1 --> I2[Live NSE Execution]
         I1 --> I3[Paper Trading Simulation]
-        I2 & I3 --> J[<b>Performance Analytics</b>]
+        I2 --> J[Performance Analytics]
+        I3 --> J
     end
     class I,J mainNode;
     class I1,I2,I3 internalNode;
 
-    %% Feedback Loop - Single path to avoid clutter
-    J -.->|Feedback Loop| F
+    %% Feedback Loop
+    J -.-> F
 
     %% Global Connector Styling
-    linkStyle default stroke:#000000,stroke-width:2px;
+    linkStyle default stroke:#000,stroke-width:2px;
 ```
 
 ---
