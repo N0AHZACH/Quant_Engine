@@ -26,95 +26,64 @@ The system implements a **selective, cross-sectional strategy** that focuses on 
 flowchart TD
     %% Global Style Definitions
     classDef mainNode fill:#FFFFFF,stroke:#000000,stroke-width:2px,color:#000000;
-    classDef internalNode fill:#F9F9F9,stroke:#000000,stroke-width:1px,color:#000000;
-    classDef labelNode fill:none,stroke:none,color:#000000,font-weight:bold;
+    classDef internalNode fill:#FBFBFB,stroke:#000000,stroke-width:1.5px,color:#000000;
 
-    %% 1. Data Infrastructure (Lake Architecture)
-    subgraph Data_Lake [1. Data Infrastructure & ETL]
-        A[<b>NSE Data Fetcher</b><br/>Multi-Source API Ingestion]
-        B[<b>Raw Data Lake</b><br/>Immutable CSV/Parquet Store]
-        C[<b>Silver Data Layer</b><br/>Cleaning, Adjustments & Splits]
-        D[<b>Gold Data Layer</b><br/>ML-Ready Model Tensors & Targets]
-        
-        A --- B
-        B --- C
-        C --- D
+    %% 1. Data Infrastructure
+    subgraph Data_Pipe [1. Data Infrastructure & ETL]
+        A[<b>NSE Data Fetcher</b>] --> B[<b>Raw Data Lake</b>]
+        B --> C[<b>Silver Data Layer</b>]
+        C --> D[<b>Gold Data Layer</b><br/>(ML Tensors & Targets)]
     end
     class A,B,C,D mainNode;
 
     %% 2. Feature Engineering
-    subgraph Feature_Layer [2. Feature Engineering Engine]
+    subgraph Feature_Eng [2. Feature Engineering Engine]
         E[<b>Feature Extraction Pipeline</b>]
-        E1[Technical: RSI, MACD, EMAs]
-        E2[Cross-Sectional: Rankings, Z-Scores]
-        E3[Volatility: ATR, Rolling Std]
-        
-        E --- E1
-        E --- E2
-        E --- E3
+        E --> E1[Technical Indicators]
+        E --> E2[Cross-Sectional Rankings]
+        E --> E3[Volatility Metrics]
     end
     class E mainNode;
     class E1,E2,E3 internalNode;
 
-    %% 3. Intelligence Engine
-    D --- F
-    E1 --- F
-    E2 --- F
-    E3 --- F
-    subgraph Intelligence_Engine [3. ML Ensemble Intelligence]
-        F[<b>Ensemble Predictor</b>]
-        F1[XGBoost & Random Forest]
-        F2[CNN / GRU / LSTM]
-        G[<b>Multi-Model Aggregation</b><br/>Weighted Return Forecasts]
-        
-        F --- F1
-        F --- F2
-        F1 --- G
-        F2 --- G
+    %% Intelligence Engine - Vertical Connections to avoid crossover
+    D --> F[<b>3. Intelligence Engine</b>]
+    E1 & E2 & E3 --> F
+    
+    subgraph Ensemble_Section [ML Ensemble Strategy]
+        F --> F1[XGBoost & Random Forest]
+        F --> F2[CNN / GRU / LSTM]
+        F1 & F2 --> G[<b>Final Model Aggregation</b>]
     end
     class F,G mainNode;
     class F1,F2 internalNode;
 
     %% 4. Risk & Decision Center
-    G --- H
-    subgraph Risk_Decision [4. Risk & Decision Center]
-        H[<b>Signal Logic Filter</b>]
-        H1{Regime Filter}
-        H2[Adaptive Risk Manager]
-        H3[Active Drawdown Guard]
-        H4[Volatility-Based Sizing]
-        
-        H --- H1
-        H1 --- H2
-        H2 --- H3
-        H2 --- H4
+    G --> H[<b>4. Risk & Decision Center</b>]
+    subgraph Risk_Strategy [Adaptive Risk Controls]
+        H --> H1{Regime Filter}
+        H1 --> H2[Adaptive Risk Manager]
+        H2 --> H3[Active Drawdown Guard]
+        H2 --> H4[Volatility-Based Sizing]
     end
     class H,H2 mainNode;
     class H1,H3,H4 internalNode;
 
     %% 5. Execution & Feedback
-    H3 --- I
-    H4 --- I
-    subgraph Execution_Feedback [5. Execution & Validation]
-        I[<b>Execution Gate</b>]
-        I1{Trade Gate}
-        I2[Live NSE Execution]
-        I3[Paper Trading Simulation]
-        J[<b>Performance Metrics</b><br/>Logging & Meta-Analytics]
-        
-        I --- I1
-        I1 --- I2
-        I1 --- I3
-        I2 --- J
-        I3 --- J
+    H3 & H4 --> I[<b>5. Execution & Validation</b>]
+    subgraph Execution_Loop [Deployment Path]
+        I --> I1{Trade Gate}
+        I1 --> I2[Live NSE Execution]
+        I1 --> I3[Paper Trading Simulation]
+        I2 & I3 --> J[<b>Performance Analytics</b>]
     end
     class I,J mainNode;
     class I1,I2,I3 internalNode;
 
-    %% Global Feedback loop
+    %% Feedback Loop - Single path to avoid clutter
     J -.->|Feedback Loop| F
 
-    %% Connector Styling - High Visibility
+    %% Global Connector Styling
     linkStyle default stroke:#000000,stroke-width:2px;
 ```
 
