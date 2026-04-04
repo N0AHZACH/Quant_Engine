@@ -1,4 +1,4 @@
-# 🚀 Quant_Engine: NSE Cross-Sectional Swing Alpha
+#  Quant Engine: NSE Cross-Sectional Swing Alpha
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
